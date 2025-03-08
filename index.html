@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <style>
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
+            height: auto;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://springboard-cdn.appadvice.com/wp-content/appadvice-v2-media/2016/11/Netflix-background_860c8ece6b34fb4f43af02255ca8f225.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 350px;
+            margin-top: 50px;
+        }
+        
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff4b4b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border: 2px solid #ff4b4b;
+            display: inline-block;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .gender-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0;
+        }
+        
+        .gender-container label {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            gap: 5px;
+        }
+        
+        button {
+            width: 45%;
+            padding: 12px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #ff4b4b;
+            color: white;
+            transition: 0.3s;
+        }
+        
+        button:hover {
+            background: #ff2020;
+        }
+        
+        button[type="reset"] {
+            background: #555;
+        }
+        
+        button[type="reset"]:hover {
+            background: #333;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                max-width: 320px;
+            }
+            h2 {
+                font-size: 20px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png" class="logo">
+    <div class="container">
+        <h2>Register</h2>
+        <form id="registrationForm">
+            <input type="text" id="firstname" placeholder="First Name" required minlength="4" pattern="[A-Za-z]+">
+            <input type="text" id="lastname" placeholder="Last Name" required minlength="1" pattern="[A-Za-z]+">
+            <input type="email" id="email" placeholder="Email ID" required>
+            <input type="date" id="dob" required>
+            <input type="tel" id="phone" placeholder="Phone Number" required pattern="[0-9]{10}">
+            <textarea id="address" placeholder="Address" required></textarea>
+            
+            <div class="gender-container">
+                <label><input type="radio" name="gender" value="Male" required> Male</label>
+                <label><input type="radio" name="gender" value="Female"> Female</label>
+            </div>
+            
+            <button type="button" onclick="validateAndSubmit()">Submit</button>
+            <button type="reset">Reset</button>
+        </form>
+    </div>
+
+    <script>
+        function calculateAge(dob) {
+            if (!dob) return "N/A";  // Handle missing date
+            let birthDate = new Date(dob);
+            let today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--; // Reduce age if birth month/date hasn't happened yet this year
+            }
+            
+            return age < 0 ? "Invalid" : age; // Prevent negative age
+        }
+
+        function validateAndSubmit() {
+            const firstname = document.getElementById('firstname').value;
+            const lastname = document.getElementById('lastname').value;
+            const email = document.getElementById('email').value;
+            const dob = document.getElementById('dob').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+
+            // Validation
+            if (!firstname || !lastname || !email || !dob || !phone || !address || !gender) {
+                alert('All fields are required!');
+                return;
+            }
+
+            if (!/^[A-Za-z]{4,}$/.test(firstname)) {
+                alert('First Name must contain at least 4 alphabets.');
+                return;
+            }
+
+            if (!/^[A-Za-z]{1,}$/.test(lastname)) {
+                alert('Last Name must contain at least 1 alphabet.');
+                return;
+            }
+
+            if (!/^\d{10}$/.test(phone)) {
+                alert('Phone Number must contain exactly 10 digits.');
+                return;
+            }
+
+            // Save data to localStorage
+            const userData = {
+                firstname,
+                lastname,
+                email,
+                dob,
+                age: calculateAge(dob), // Calculate age from DOB
+                phone, // Store phone number in normal form
+                address,
+                gender
+            };
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push(userData);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Redirect to index1.html
+            window.location.href = 'index1.html';
+        }
+    </script>
+</body>
+</html>
