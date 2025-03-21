@@ -15,10 +15,14 @@
             text-align: center;
             color: #333;
         }
+        .table-container {
+            overflow-x: auto;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
+            min-width: 600px;
         }
         table, th, td {
             border: 1px solid #ddd;
@@ -51,28 +55,48 @@
         .clear-button:hover {
             background-color: #ff2020;
         }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .clear-button {
+                width: 100%;
+                font-size: 14px;
+                padding: 12px;
+            }
+            th, td {
+                padding: 10px;
+                font-size: 14px;
+            }
+            table {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
     <h1>User Data</h1>
     <button class="clear-button" onclick="clearUsers()">Clear All Data</button>
-    <table>
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>Address</th>
-                <th>Date of Birth</th>
-                <th>Age</th>
-                <th>Gender</th>
-            </tr>
-        </thead>
-        <tbody id="userTableBody">
-            <!-- Data will be populated here -->
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Date of Birth</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- Data will be populated here -->
+            </tbody>
+        </table>
+    </div>
 
     <script>
         function loadUsers() {
@@ -89,10 +113,10 @@
                     <td>${user.firstname || "N/A"}</td>
                     <td>${user.lastname || "N/A"}</td>
                     <td>${user.email || "N/A"}</td>
-                    <td>${user.phone || "N/A"}</td> <!-- Phone number in normal form -->
+                    <td>${user.phone || "N/A"}</td>
                     <td>${user.address || "N/A"}</td>
                     <td>${user.dob || "N/A"}</td>
-                    <td>${user.age || "N/A"}</td> <!-- Age calculated from DOB -->
+                    <td>${user.age || "N/A"}</td>
                     <td>${user.gender || "N/A"}</td>
                 </tr>`).join('');
         }
@@ -100,11 +124,11 @@
         function clearUsers() {
             if (confirm("Are you sure you want to delete all users?")) {
                 localStorage.removeItem('users');
-                loadUsers(); // Refresh the table
+                loadUsers();
             }
         }
 
-        window.onload = loadUsers; // Load users when the page loads
+        window.onload = loadUsers;
     </script>
 </body>
 </html>
